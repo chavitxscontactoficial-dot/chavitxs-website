@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Red de Colaboradores | CHAVITXS</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800;900&display=swap" rel="stylesheet">
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="logo">CHA<span class="highlight-vih">VI</span>TXS</div>
+    </header>
+
+    <main class="section-container">
+    <h1 class="section-title">Red de <span class="accent">Colaboradores</span></h1>        
+        <div class="collab-grid">
+            <div class="collab-box">
+                <h3>Quiero ser colaborador</h3>
+                <p>Únete como profesional, estudiante o colectivo para llevar talleres, pruebas y mentoría a más escuelas.</p>
+                <button class="btn-secondary" onclick="alert('Aún no existen convocatorias')">Sumarme a la red</button>
+            </div>
+
+            <div class="collab-box intranet-box highlight-card">
+                <h3>Área de Colaboradores</h3>
+                <p>Acceso exclusivo para el equipo operativo. Consulta agendas, formatos de canalización e insumos.</p>
+                <button id="btnLoginGoogle" class="btn-primary" onclick="iniciarSesionGoogle()">
+                    <i class="fa-brands fa-google"></i> Iniciar Sesión con Google
+                </button>
+            </div>
+
+        </div>
+    </main>
+
+    <nav class="bottom-nav">
+        <a href="index.html" class="nav-item">
+            <span class="nav-icon">🏠</span>
+            <span class="nav-label">Inicio</span>
+        </a>
+        <a href="guias.html" class="nav-item">
+            <span class="nav-icon">📚</span>
+            <span class="nav-label">Guías</span>
+        </a>
+        <a href="bitacora.html" class="nav-item">
+            <span class="nav-icon">📰</span>
+            <span class="nav-label">Bitácora</span>
+        </a>
+        <a href="red.html" class="nav-item active">
+            <span class="nav-icon">👥</span>
+            <span class="nav-label">Red</span>
+        </a>
+    </nav>
+
+<script src="script.js"></script>
+</body>
+</html>

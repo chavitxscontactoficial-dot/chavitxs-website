@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intranet | CHAVITXS</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="logo">CHA<span class="highlight-vih">VIH</span>TXS</div>
+    </header>
+
+    <main class="section-container">
+
+        <div class="profile-card">
+            <div class="profile-info">
+                <span class="card-tag">Colaborador Activo</span>
+                <h2 id="userName">Hola, Colaborador</h2>
+                <p id="userEmail">equipo@chavitxs.org</p>
+            </div>
+            <button class="btn-logout" onclick="cerrarSesion()"><i class="fa-solid fa-right-from-bracket"></i> Salir</button>
+        </div>
+
+        <h1 class="section-title">Panel de <span class="accent">Operaciones</span></h1>
+        <p class="sub-subtitle">Explora las metas que buscamos para este año.</p>
+
+        <div class="grid-cards">
+
+  <!-- 1. LOGROS, PLANES Y BARRA DE PROGRESO DINÁMICA -->
+  <article class="info-card highlight-card full-width-card">
+    <div class="card-header-clean" style="justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+      <div>
+        <span class="card-tag">Estrategia Dinámica</span>
+        <h3>Logros y Planes 2026</h3>
+      </div>
+      <!-- Modal o Formulario para agregar nuevo plan -->
+      <button class="btn-primary" onclick="togglePlanForm()" style="width: auto; padding: 0.5rem 1rem;">
+        <i class="fa-solid fa-plus"></i> Añadir Plan / Meta
+      </button>
+    </div>
+
+    <!-- BARRA DE PROGRESO INTELIGENTE -->
+    <div class="progress-container">
+      <div class="progress-info">
+        <span><strong>Avance Meta 2026:</strong> <span id="progressText">0 de 0 completados</span></span>
+        <strong id="progressPercent" style="color: var(--green-neon);">0%</strong>
+      </div>
+      <div class="progress-bar-bg">
+        <div id="progressBarFill" class="progress-bar-fill" style="width: 0%;"></div>
+      </div>
+    </div>
+      <!-- Botón en la cabecera de la sección -->
+<button class="btn-secondary" onclick="limpiarCompletadasManualmente()" style="font-size: 0.75rem; padding: 0.4rem 0.8rem;">
+  <i class="fa-solid fa-broom"></i> Limpiar Cumplidas
+</button>
+
+    <!-- Formulario Desplegable para Agregar Planes -->
+    <div id="addPlanForm" class="add-form-box" style="display: none;">
+      <input type="text" id="newPlanTitle" placeholder="Nombre del plan o meta..." class="intranet-input">
+      <select id="newPlanCategory" class="intranet-input">
+        <option value="redes">Redes Sociales</option>
+        <option value="articulos">Artículos</option>
+        <option value="colab">Colaboraciones</option>
+        <option value="app">App CHAVIHTXS</option>
+        <option value="miembros">Equipo</option>
+      </select>
+      <button onclick="agregarPlan()" class="btn-primary">Guardar Meta</button>
+    </div>
+
+    <!-- Navegación de Pestañas -->
+    <div class="tab-nav">
+      <button class="tab-btn active" onclick="openTab(event, 'tab-redes')"><i class="fa-brands fa-instagram"></i> Redes</button>
+      <button class="tab-btn" onclick="openTab(event, 'tab-articulos')"><i class="fa-solid fa-newspaper"></i> Artículos</button>
+      <button class="tab-btn" onclick="openTab(event, 'tab-colab')"><i class="fa-solid fa-handshake"></i> Colabs</button>
+      <button class="tab-btn" onclick="openTab(event, 'tab-app')"><i class="fa-solid fa-mobile-screen-button"></i> App</button>
+      <button class="tab-btn" onclick="openTab(event, 'tab-miembros')"><i class="fa-solid fa-users"></i> Equipo</button>
+    </div>
+
+    <!-- Contenedores de Listas por Pestaña -->
+    <div class="tab-content-container">
+      <div id="tab-redes" class="tab-content active"><ul id="list-redes" class="dynamic-task-list"></ul></div>
+      <div id="tab-articulos" class="tab-content"><ul id="list-articulos" class="dynamic-task-list"></ul></div>
+      <div id="tab-colab" class="tab-content"><ul id="list-colab" class="dynamic-task-list"></ul></div>
+      <div id="tab-app" class="tab-content"><ul id="list-app" class="dynamic-task-list"></ul></div>
+      <div id="tab-miembros" class="tab-content"><ul id="list-miembros" class="dynamic-task-list"></ul></div>
+    </div>
+  </article>
+
+  <!-- 2. BUZÓN DE IDEAS CON LISTA INFERIOR -->
+  <article class="info-card">
+    <div class="card-header-clean">
+      <i class="fa-solid fa-lightbulb card-icon-top"></i>
+      <h3>Buzón de Ideas</h3>
+    </div>
+    
+    <form class="idea-form" onsubmit="guardarIdea(event)">
+      <input type="text" id="ideaTitle" placeholder="Título de la idea..." class="intranet-input" required>
+      <textarea id="ideaDesc" placeholder="¿De qué trata la propuesta?" class="intranet-textarea" rows="2" required></textarea>
+      <button type="submit" class="btn-primary">Añadir Idea</button>
+    </form>
+
+    <!-- Lista donde se muestran las ideas guardadas -->
+    <div class="ideas-history-container">
+      <h4>Ideas Registradas</h4>
+      <ul id="ideasList" class="ideas-list"></ul>
+    </div>
+  </article>
+
+ <!-- 3. INSUMOS Y TRANSPARENCIA -->
+<article class="info-card">
+  <div class="card-header-clean" style="justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
+    <div style="display:flex; align-items:center; gap:0.5rem;">
+      <i class="fa-solid fa-boxes-stacked card-icon-top"></i>
+      <h3>Insumos Básicos</h3>
+    </div>
+    <button class="btn-secondary" onclick="exportarInsumosASheets()" style="font-size:0.75rem; padding:0.4rem 0.8rem; width:auto;">
+      <i class="fa-solid fa-file-excel"></i> Cierre a Sheets
+    </button>
+  </div>
+
+  <!-- Formulario para agregar o ajustar stock -->
+  <form onsubmit="guardarInsumo(event)" style="margin-bottom: 1.2rem;">
+    <input type="text" id="stockName" placeholder="Nombre del insumo..." class="intranet-input" required>
+    <input type="number" id="stockQty" placeholder="Nueva cantidad total..." class="intranet-input" required>
+    <button type="submit" class="btn-primary" style="padding:0.5rem; width: 100%;">Actualizar / Registrar Stock</button>
+  </form>
+
+  <!-- Lista de Insumos Dinámica con Botones + y - -->
+  <div id="stockContainer" class="mini-stock-grid"></div>
+</article>
+
+  <div id="stockContainer" class="mini-stock-grid"></div>
+</article>
+
+</div>
+
+    </main>
+
+    <nav class="bottom-nav">
+        <a href="index.html" class="nav-item">
+            <span class="nav-icon"><i class="fa-solid fa-house"></i></span>
+            <span class="nav-label">Inicio</span>
+        </a>
+        <a href="guias.html" class="nav-item">
+            <span class="nav-icon"><i class="fa-solid fa-book"></i></span>
+            <span class="nav-label">Guías</span>
+        </a>
+        <a href="bitacora.html" class="nav-item">
+            <span class="nav-icon"><i class="fa-solid fa-newspaper"></i></span>
+            <span class="nav-label">Bitácora</span>
+        </a>
+        <a href="red.html" class="nav-item active">
+            <span class="nav-icon"><i class="fa-solid fa-users"></i></span>
+            <span class="nav-label">Red</span>
+        </a>
+    </nav>
+
+    <script src="script.js"></script>
+</body>
+</html>
