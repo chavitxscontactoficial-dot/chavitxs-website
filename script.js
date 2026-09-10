@@ -46,9 +46,9 @@ function iniciarSesionGoogle() {
           // Agrega aquí todos los correos del equipo que pueden entrar:
           // =========================================================
           const listaColaboradores = [
+            "chavitxs.contactoficial@gmail.com",
             "aar.cor.academico2@gmail.com",
             "alearerob28@gmail.com",
-            "chavitxs.contactoficial@gmail.com",
             "escutiavalentina@gmail.com",
             "bren.dlogz@gmail.com",
             "mdzferr03@gmail.com",
