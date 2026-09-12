@@ -55,6 +55,7 @@ function iniciarSesionGoogle() {
             "chavitxs.contactoficial@gmail.com",
             "aar.cor.academico2@gmail.com",
             "alearerob28@gmail.com",
+            'deo.ar.studio@gmail.com',
             "escutiavalentina@gmail.com",
             "bren.dlogz@gmail.com",
             "mdzferr03@gmail.com",
