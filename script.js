@@ -1,21 +1,28 @@
 // ==========================================================================
-// CONTROL GLOBAL Y LÓGICA DE LA INTRANET - CHAVITXS
+// CONTROL GLOBAL Y LÓGICA DE LA INTRANET - CHAVITXS (CONECTADO A FIREBASE)
 // ==========================================================================
+
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyCmuDRSFkP19a-5NataekAMQxp0JmCUxIA",
+  authDomain: "chavitxs-e26a6.firebaseapp.com",
+  projectId: "chavitxs-e26a6",
+  storageBucket: "chavitxs-e26a6.firebasestorage.app",
+  messagingSenderId: "495723748399",
+  appId: "1:495723748399:web:b63d2a74fb5f3f2abcfada",
+  measurementId: "G-BRYSG0KZL2"
+};
+
+// Inicializar Firebase
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
 
 const SIETE_DIAS_MS = 604800000; // 7 días en milisegundos
 
-// --- ESTADOS INICIALES DESDE LOCALSTORAGE (DECLARACIÓN ÚNICA) ---
-let planesData = JSON.parse(localStorage.getItem('chavitxs_planes')) || [  
-  { id: 1, categoria: 'redes', texto: '3 contenidos semanales sobre prevención', completado: false },  
-  { id: 2, categoria: 'redes', texto: 'Llegar a 10k seguidores en IG y TikTok', completado: false },  
-  { id: 3, categoria: 'articulos', texto: 'Guía PEP en 72 hrs', completado: true },  
-  { id: 4, categoria: 'articulos', texto: 'Mitos del SAT para jóvenes', completado: false },  
-  { id: 5, categoria: 'app', texto: 'Notificaciones push con PWA cerrada', completado: false }  
-];  
-
-let ideasData = JSON.parse(localStorage.getItem('chavitxs_ideas')) || [];  
-
-let insumosData = JSON.parse(localStorage.getItem('chavitxs_insumos')) || [
+// --- ESTADOS INICIALES EN LA NUBE ---
+let planesData = [];  
+let ideasData = [];  
+let insumosData = [
   { id: 1, nombre: 'Pruebas VIH', cantidad: 150 },
   { id: 2, nombre: 'Condones', cantidad: 30 },
   { id: 3, nombre: 'Lubricantes', cantidad: 200 },
@@ -43,7 +50,6 @@ function iniciarSesionGoogle() {
           
           // =========================================================
           // A) LISTA BLANCA DE CORREOS AUTORIZADOS
-          // Agrega aquí todos los correos del equipo que pueden entrar:
           // =========================================================
           const listaColaboradores = [
             "chavitxs.contactoficial@gmail.com",
@@ -62,7 +68,7 @@ function iniciarSesionGoogle() {
           // 3. Si NO está en la lista, mostramos alerta y frenamos la entrada
           if (!estaAutorizado) {
             alert(`Acceso denegado. La cuenta (${user.email}) no está registrada como colaboradora de CHAVITXS.`);
-            return; // Al poner return, el código se detiene aquí y no redirige a la intranet
+            return; 
           }
 
           // 4. Si SÍ está autorizado, creamos el objeto de sesión con sus datos reales
@@ -96,7 +102,6 @@ function cerrarSesion() {
 // --- INICIALIZACIÓN ÚNICA DEL DOM ---
 document.addEventListener('DOMContentLoaded', () => {  
 
-  // 1. Botón Google Login en red.html
   // 1. Botón Google Login en red.html
   const btnLogin = document.getElementById('btnLoginGoogle');  
   if (btnLogin) {  
@@ -134,12 +139,55 @@ document.addEventListener('DOMContentLoaded', () => {
     });  
   }  
 
-  // 4. Cargar módulos de Intranet
-  verificarLimpiezaSemanal();
-  renderPlanes();  
-  renderIdeas();  
-  renderInsumos();
+  // 4. Cargar módulos de Intranet y Sincronización en Tiempo Real con Firebase
+  if (window.location.pathname.includes('intranet.html')) {
+    verificarLimpiezaSemanal();
+    sincronizarConFirebase();
+  }
 });  
+
+// --- SINCRONIZACIÓN EN TIEMPO REAL CON FIRESTORE ---
+function sincronizarConFirebase() {
+  // Escuchar cambios en la colección de planes
+  db.collection("planes").onSnapshot((querySnapshot) => {
+    planesData = [];
+    querySnapshot.forEach((doc) => {
+      planesData.push({ idDoc: doc.id, ...doc.data() });
+    });
+    renderPlanes();
+  }, (error) => {
+    console.error("Error al obtener planes: ", error);
+  });
+
+  // Escuchar cambios en la colección de ideas
+  db.collection("ideas").onSnapshot((querySnapshot) => {
+    ideasData = [];
+    querySnapshot.forEach((doc) => {
+      ideasData.push({ idDoc: doc.id, ...doc.data() });
+    });
+    renderIdeas();
+  }, (error) => {
+    console.error("Error al obtener ideas: ", error);
+  });
+
+  // Escuchar cambios en la colección de insumos
+  db.collection("insumos").onSnapshot((querySnapshot) => {
+    if (!querySnapshot.empty) {
+      insumosData = [];
+      querySnapshot.forEach((doc) => {
+        insumosData.push({ idDoc: doc.id, ...doc.data() });
+      });
+    } else {
+      // Si está vacía por primera vez, subimos los insumos por defecto
+      insumosData.forEach(item => {
+        db.collection("insumos").add(item);
+      });
+    }
+    renderInsumos();
+  }, (error) => {
+    console.error("Error al obtener insumos: ", error);
+  });
+}
 
 // --- MÓDULO 1: NAVEGACIÓN Y METAS ---
 function openTab(evt, tabName) {  
@@ -161,34 +209,28 @@ function agregarPlan() {
   const selectCat = document.getElementById('newPlanCategory');  
   if (!inputTexto || !inputTexto.value.trim()) return alert('Escribe un título.');  
 
-  planesData.push({  
-    id: Date.now(),  
-    categoria: selectCat.value,  
-    texto: inputTexto.value.trim(),  
-    completado: false  
-  });  
-  guardarYActualizarPlanes();  
-  inputTexto.value = '';  
-  togglePlanForm();  
+  // Añadir a Firebase en lugar de localStorage
+  db.collection("planes").add({
+    id: Date.now(),
+    categoria: selectCat.value,
+    texto: inputTexto.value.trim(),
+    completado: false
+  }).then(() => {
+    inputTexto.value = '';  
+    togglePlanForm();  
+  }).catch(err => console.error("Error al agregar plan:", err));
 }  
 
-function toggleCompletado(id) {  
-  planesData = planesData.map(plan => {  
-    if (plan.id === id) plan.completado = !plan.completado;  
-    return plan;  
-  });  
-  guardarYActualizarPlanes();  
+function toggleCompletado(idDoc, estadoActual) {  
+  db.collection("planes").doc(idDoc).update({
+    completado: !estadoActual
+  }).catch(err => console.error("Error al actualizar plan:", err));
 }  
 
-function borrarPlan(id) {
-  planesData = planesData.filter(p => p.id !== id);
-  guardarYActualizarPlanes();
+function borrarPlan(idDoc) {
+  db.collection("planes").doc(idDoc).delete()
+    .catch(err => console.error("Error al borrar plan:", err));
 }
-
-function guardarYActualizarPlanes() {  
-  localStorage.setItem('chavitxs_planes', JSON.stringify(planesData));  
-  renderPlanes();  
-}  
 
 function renderPlanes() {  
   ['redes', 'articulos', 'colab', 'app', 'miembros'].forEach(cat => {  
@@ -207,10 +249,10 @@ function renderPlanes() {
       li.className = `task-item-dynamic ${plan.completado ? 'completed' : ''}`;  
       li.innerHTML = `  
         <label class="custom-checkbox">  
-          <input type="checkbox" ${plan.completado ? 'checked' : ''} onchange="toggleCompletado(${plan.id})">  
+          <input type="checkbox" ${plan.completado ? 'checked' : ''} onchange="toggleCompletado('${plan.idDoc}', ${plan.completado})">  
           <span class="plan-text">${plan.texto}</span>  
         </label>  
-        <i class="fa-solid fa-trash" onclick="borrarPlan(${plan.id})" style="cursor:pointer; color:var(--highlight-pink); font-size:0.75rem;"></i>
+        <i class="fa-solid fa-trash" onclick="borrarPlan('${plan.idDoc}')" style="cursor:pointer; color:var(--highlight-pink); font-size:0.75rem;"></i>
       `;  
       listEl.appendChild(li);  
     }  
@@ -237,10 +279,14 @@ function guardarIdea(e) {
   const desc = descEl.value.trim();  
   if (!titulo || !desc) return;  
 
-  ideasData.unshift({ id: Date.now(), titulo, desc, fecha: new Date().toLocaleDateString('es-MX') });  
-  localStorage.setItem('chavitxs_ideas', JSON.stringify(ideasData));  
-  e.target.reset();  
-  renderIdeas();  
+  db.collection("ideas").add({
+    id: Date.now(),
+    titulo,
+    desc,
+    fecha: new Date().toLocaleDateString('es-MX')
+  }).then(() => {
+    e.target.reset();  
+  }).catch(err => console.error("Error al guardar idea:", err));
 }  
 
 function renderIdeas() {  
@@ -263,10 +309,10 @@ function renderIdeas() {
       </div>  
       <p style="margin-bottom:0.5rem; color:var(--text-muted); font-size:0.85rem;">${idea.desc}</p>  
       <div style="display:flex; gap:0.4rem; justify-content:flex-end;">  
-        <button onclick="aprobarIdeaAMeta(${idea.id})" class="btn-primary" style="font-size:0.7rem; padding:0.25rem 0.5rem; width:auto;">  
+        <button onclick="aprobarIdeaAMeta('${idea.idDoc}')" class="btn-primary" style="font-size:0.7rem; padding:0.25rem 0.5rem; width:auto;">  
           Aprobar a Meta  
         </button>  
-        <button onclick="borrarIdea(${idea.id})" class="btn-secondary" style="font-size:0.7rem; padding:0.25rem 0.5rem; width:auto; color:var(--highlight-pink);">  
+        <button onclick="borrarIdea('${idea.idDoc}')" class="btn-secondary" style="font-size:0.7rem; padding:0.25rem 0.5rem; width:auto; color:var(--highlight-pink);">  
           <i class="fa-solid fa-trash"></i>  
         </button>  
       </div>  
@@ -275,32 +321,31 @@ function renderIdeas() {
   });  
 }  
 
-function borrarIdea(id) {  
-  ideasData = ideasData.filter(i => i.id !== id);  
-  localStorage.setItem('chavitxs_ideas', JSON.stringify(ideasData));  
-  renderIdeas();  
+function borrarIdea(idDoc) {  
+  db.collection("ideas").doc(idDoc).delete()
+    .catch(err => console.error("Error al borrar idea:", err));  
 }  
 
-function aprobarIdeaAMeta(id) {  
-  const idea = ideasData.find(i => i.id === id);  
+function aprobarIdeaAMeta(idDoc) {  
+  const idea = ideasData.find(i => i.idDoc === idDoc);  
   if (!idea) return;  
 
   const cat = prompt("Categoría destino:\n(redes, articulos, colab, app, miembros)", "redes");  
   const validas = ['redes', 'articulos', 'colab', 'app', 'miembros'];  
 
   if (cat && validas.includes(cat.toLowerCase().trim())) {  
-    planesData.push({  
+    db.collection("planes").add({  
       id: Date.now(),  
       categoria: cat.toLowerCase().trim(),  
       texto: `${idea.titulo}: ${idea.desc}`,  
       completado: false  
-    });  
-    guardarYActualizarPlanes();  
-    borrarIdea(id);  
+    }).then(() => {
+      borrarIdea(idDoc);  
+    }).catch(err => console.error("Error al aprobar idea a meta:", err));
   }  
 }  
 
-// --- MÓDULO 3: INSUMOS BÁSICOS (SIN ELIMINACIÓN Y CON BOTONES +/-) ---
+// --- MÓDULO 3: INSUMOS BÁSICOS ---
 function renderInsumos() {
   const container = document.getElementById('stockContainer');
   if (!container) return;
@@ -320,8 +365,8 @@ function renderInsumos() {
       <div style="display:flex; justify-content:space-between; align-items:center; width:100%; margin-bottom:0.4rem;">
         <span style="font-weight:600;">${item.nombre}</span>
         <div class="stock-controls">
-          <button onclick="modificarStock(${item.id}, -1)" class="btn-stock-adj">-</button>
-          <button onclick="modificarStock(${item.id}, 1)" class="btn-stock-adj">+</button>
+          <button onclick="modificarStock('${item.idDoc}', ${item.cantidad}, -1)" class="btn-stock-adj">-</button>
+          <button onclick="modificarStock('${item.idDoc}', ${item.cantidad}, 1)" class="btn-stock-adj">+</button>
         </div>
       </div>
       <strong>${item.cantidad > 0 ? item.cantidad + ' pcs' : 'Agotado'}</strong>
@@ -330,15 +375,13 @@ function renderInsumos() {
   });
 }
 
-function modificarStock(id, cambio) {
-  insumosData = insumosData.map(item => {
-    if (item.id === id) {
-      const nuevaCant = item.cantidad + cambio;
-      return { ...item, cantidad: nuevaCant < 0 ? 0 : nuevaCant };
-    }
-    return item;
-  });
-  guardarYRenderizarInsumos();
+function modificarStock(idDoc, cantidadActual, cambio) {
+  const nuevaCant = cantidadActual + cambio;
+  const cantFinal = nuevaCant < 0 ? 0 : nuevaCant;
+
+  db.collection("insumos").doc(idDoc).update({
+    cantidad: cantFinal
+  }).catch(err => console.error("Error al modificar stock:", err));
 }
 
 function guardarInsumo(e) {
@@ -349,21 +392,21 @@ function guardarInsumo(e) {
 
   const nombre = nameEl.value.trim();
   const cantidad = parseInt(qtyEl.value);
+  const cantFinal = cantidad < 0 ? 0 : cantidad;
 
-  const idx = insumosData.findIndex(i => i.nombre.toLowerCase() === nombre.toLowerCase());
-  if (idx !== -1) {
-    insumosData[idx].cantidad = cantidad < 0 ? 0 : cantidad;
+  const existente = insumosData.find(i => i.nombre.toLowerCase() === nombre.toLowerCase());
+
+  if (existente) {
+    db.collection("insumos").doc(existente.idDoc).update({
+      cantidad: cantFinal
+    }).then(() => e.target.reset());
   } else {
-    insumosData.push({ id: Date.now(), nombre, cantidad: cantidad < 0 ? 0 : cantidad });
+    db.collection("insumos").add({
+      id: Date.now(),
+      nombre,
+      cantidad: cantFinal
+    }).then(() => e.target.reset());
   }
-
-  guardarYRenderizarInsumos();
-  e.target.reset();
-}
-
-function guardarYRenderizarInsumos() {
-  localStorage.setItem('chavitxs_insumos', JSON.stringify(insumosData));
-  renderInsumos();
 }
 
 function exportarInsumosASheets() {
@@ -388,8 +431,11 @@ function verificarLimpiezaSemanal() {
   const ahora = Date.now();  
 
   if (!ultima || (ahora - parseInt(ultima)) >= SIETE_DIAS_MS) {  
-    planesData = planesData.filter(p => !p.completado);  
-    localStorage.setItem('chavitxs_planes', JSON.stringify(planesData));  
+    planesData.forEach(plan => {
+      if (plan.completado && plan.idDoc) {
+        db.collection("planes").doc(plan.idDoc).delete();
+      }
+    });
     localStorage.setItem('chavitxs_last_cleanup', ahora.toString());  
   }  
 }
