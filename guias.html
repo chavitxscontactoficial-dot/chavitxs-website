@@ -1,68 +1,319 @@
-<!DOCTYPE html>  
-<html lang="es">  
-<head>  
-  <meta charset="UTF-8">  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">  
-  <title>Guías de Bolsillo | CHAVITXS</title>  
-  <link rel="stylesheet" href="style.css">  
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800;900&display=swap" rel="stylesheet">
-  <link rel="icon" type="image/png" href="icon-512.png">
-</head>  
-<body>  
-  
-  <header class="main-header">  
-    <div class="logo">CHA<span class="highlight-vih">VI</span>TXS</div>  
-  </header>  
-  
-  <main class="section-container">  
-    <h1 class="section-title">Guías de <span class="accent">Bolsillo</span></h1>  
-    <p class="sub-subtitle">Información directa, sin rodeos y validada por expertos para resolver la vida cotidiana.</p>  
-  
-    <div class="grid-cards">  
-      <!-- Sección Salud Sexual -->  
-      <article id="prep" class="info-card highlight-card">  
-        <span class="card-tag">Salud Sexual</span>  
-        <h3>VIH, PrEP y PEP</h3>  
-        <p>La guía completa sobre la prevención, la indetectabilidad (I=I) y cómo solicitar PrEP o PEP si tuviste una exposición de riesgo.</p>  
-      </article>  
-  
-      <article id="sat" class="info-card">  
-        <span class="card-tag">Vida Adulta</span>  
-        <h3>El SAT y tu Dinero</h3>  
-        <p>Aprende a tramitar tu RFC, generar tu e.firma y entender tus obligaciones fiscales sin entrar en pánico.</p>  
-        <a href="#" class="btn-secondary">Leer Guía Completa</a>  
-      </article>  
-  
-      <article id="derechos" class="info-card">  
-        <span class="card-tag">Protección</span>  
-        <h3>Tus Derechos Ciudadanos</h3>  
-        <p>Qué hacer en caso de discriminación, abusos de autoridad o problemas laborales y escolares.</p>  
-        <a href="#" class="btn-secondary">Leer Guía Completa</a>  
-      </article>  
-    </div>  
-  </main>  
-  
-  <!-- Bottom Nav Unificada -->  
-  <nav class="bottom-nav">  
-    <a href="index.html" class="nav-item">  
-      <span class="nav-icon"><i class="fa-solid fa-house"></i></span>  
-      <span class="nav-label">Inicio</span>  
-    </a>  
-    <a href="guias.html" class="nav-item active">  
-      <span class="nav-icon"><i class="fa-solid fa-book"></i></span>  
-      <span class="nav-label">Guías</span>  
-    </a>  
-    <a href="bitacora.html" class="nav-item">  
-      <span class="nav-icon"><i class="fa-solid fa-newspaper"></i></span>  
-      <span class="nav-label">Bitácora</span>  
-    </a>  
-    <a href="red.html" class="nav-item">  
-      <span class="nav-icon"><i class="fa-solid fa-users"></i></span>  
-      <span class="nav-label">Red</span>  
-    </a>  
-  </nav>  
-  
-  <script src="script.js"></script>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guías de Bolsillo | CHAVITXS</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <header class="main-header">
+    <div class="logo">CHA<span class="highlight-vih">VI</span>TXS</div>
+  </header>
+
+  <main class="section-container">
+
+    <!-- ================= VISTA 1: LA LISTA DE GUÍAS ================= -->
+    <div id="vista-lista">
+      <h1 class="section-title">Guías de <span class="accent">Bolsillo</span></h1>
+      <p class="sub-subtitle">Información directa, sin rodeos y validada por expertos para resolver la vida cotidiana.</p>
+
+      <div class="grid-cards">
+        <!-- Tarjeta VIH, PrEP y PEP -->
+        <article id="prep" class="info-card highlight-card">
+          <span class="card-tag">Salud Sexual</span>
+          <h3>VIH, PrEP y PEP</h3>
+          <p>La guía completa sobre la prevención, la indetectabilidad (I=I) y cómo solicitar PrEP o PEP si tuviste una exposición de riesgo.</p>
+          <!-- Botón que cambia de vista en el mismo HTML -->
+          <button onclick="mostrarGuia('detalle-vih')" class="btn-secondary" style="margin-top: 15px; cursor: pointer;">
+            Leer Guía Completa ➔
+          </button>
+        </article>
+
+        <article id="sat" class="info-card">
+          <span class="card-tag">Vida Adulta</span>
+          <h3>El SAT y tu Dinero</h3>
+          <p>Aprende a tramitar tu RFC, generar tu e.firma y entender tus obligaciones fiscales sin entrar en pánico.</p>
+          <!-- Cambiamos el enlace antiguo por el disparador de la función -->
+          <button onclick="mostrarGuia('detalle-sat')" class="btn-secondary" style="margin-top: 15px; cursor: pointer;">
+          Leer Guía Completa ➔
+          </button>
+        </article>
+
+        <article id="derechos" class="info-card">
+          <span class="card-tag">Protección</span>
+          <h3>Tus Derechos Ciudadanos</h3>
+          <p>Qué hacer en caso de discriminación, abusos de autoridad o problemas laborales y escolares.</p>
+          <!-- Botón que activa la vista detallada de derechos -->
+          <button onclick="mostrarGuia('detalle-derechos')" class="btn-secondary" style="margin-top: 15px; cursor: pointer;">
+            Leer Guía Completa ➔
+          </button>
+        </article>
+       
+      </div>
+    </div>
+
+<!-- ===================================================
+ VISTA 2: SALUDD SEXUAL.- EL DETALLE DE LA GUÍA (Oculto al inicio)
+ =================================================== -->
+
+    <div id="detalle-vih" style="display: none;">
+      <!-- Botón para regresar a la lista de guías -->
+      <button onclick="mostrarLista()" class="btn-secondary" style="margin-bottom: 20px; cursor: pointer; background: transparent; border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 8px 15px; border-radius: 8px;">
+        ← Volver a las guías
+      </button>
+
+      <span class="card-tag">Salud Sexual</span>
+      <h1 class="section-title" style="text-align: left; font-size: 2rem; margin-top: 10px;">VIH, PrEP y PEP</h1>
+      <p class="sub-subtitle" style="text-align: left; margin-bottom: 30px;">La guía completa sobre la prevención, la indetectabilidad (I=I) y cómo solicitar PrEP o PEP si tuviste una exposición de riesgo.</p>
+
+      <!-- AQUÍ PEGATELO -->
+      <div class="content-body" style="background: rgba(255,255,255,0.03); padding: 25px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08);">
+          
+          <details style="margin-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px;">
+              <summary style="color: #fff; font-weight: 600; cursor: pointer; font-size: 1.05rem;">
+                ¿Qué es el VIH y qué significa que sea Indetectable = Intransmisible (I=I)?
+              </summary>
+              <p style="color: #ccc; line-height: 1.6; margin-top: 10px; padding-left: 10px;">
+                El Virus de la Inmunodeficiencia Humana (VIH) afecta las células del sistema inmunitario. Hoy en día, gracias a la ciencia, una persona con VIH que toma su tratamiento antirretroviral de forma correcta y mantiene su carga viral indetectable en la sangre <strong>no puede transmitir el virus por vía sexual (I=I)</strong>.
+              </p>
+          </details>
+
+          <details style="margin-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px;">
+              <summary style="color: #fff; font-weight: 600; cursor: pointer; font-size: 1.05rem;">
+                ¿Qué es la PrEP y cómo funciona para prevenirlo?
+              </summary>
+              <p style="color: #ccc; line-height: 1.6; margin-top: 10px; padding-left: 10px;">
+                Es la Profilaxis Pre-Exposición. Consiste en el uso de medicamentos antirretrovirales por parte de personas <em>sin</em> VIH antes de una posible exposición para reducir drásticamente las probabilidades de contraer el virus.
+              </p>
+          </details>
+
+          <details style="margin-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px;">
+              <summary style="color: #fff; font-weight: 600; cursor: pointer; font-size: 1.05rem;">
+                ¿Tuve una relación de riesgo, qué es la PEP y a qué hora debo tomarla?
+              </summary>
+              <p style="color: #ccc; line-height: 1.6; margin-top: 10px; padding-left: 10px;">
+                La PEP (Profilaxis Post-Exposición) es un tratamiento de emergencia de 28 días que debes tomar <em>después</em> de una exposición al virus. 
+                <br><br>⚠️ <strong>El tiempo es vital:</strong> Debe iniciarse idealmente en las primeras <strong>24 a 36 horas</strong> posteriores al riesgo, y nunca después de las 72 horas.
+              </p>
+          </details>
+
+          <details style="padding-bottom: 5px;">
+              <summary style="color: #fff; font-weight: 600; cursor: pointer; font-size: 1.05rem;">
+                ¿Dónde puedo solicitar PrEP o PEP de forma segura?
+              </summary>
+              <p style="color: #ccc; line-height: 1.6; margin-top: 10px; padding-left: 10px;">
+                Puedes acudir a clínicas especializadas en salud sexual, centros de salud públicos con servicios amigables o clínicas especializadas (como las Clínicas Condesa) para recibir orientación médica, pruebas rápidas y acceso a tus tratamientos.
+              </p>
+          </details>
+
+      </div>
+      
+    </div>
+<!-- ================= VISTA DETALLE: EL SAT Y TU DINERO ================= -->
+    <div id="detalle-sat" style="display: none;">
+      <!-- Botón para regresar a la lista general -->
+      <button onclick="mostrarLista()" class="btn-secondary" style="margin-bottom: 20px; cursor: pointer; background: transparent; border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 8px 15px; border-radius: 8px;">
+        ← Volver a las guías
+      </button>
+
+      <span class="card-tag">Vida Adulta</span>
+      <h1 class="section-title" style="text-align: left; font-size: 2rem; margin-top: 10px;">El SAT y tu Dinero</h1>
+      <p class="sub-subtitle" style="text-align: left; margin-bottom: 30px;">Aprende a tramitar tu RFC, generar tu e.firma y entender tus obligaciones fiscales sin entrar en pánico.</p>
+
+      <div class="content-body" style="background: rgba(255,255,255,0.03); padding: 25px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08);">
+          
+          <!-- Pregunta 1 -->
+          <details style="margin-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px;">
+              <summary style="color: #fff; font-weight: 600; cursor: pointer; font-size: 1.05rem;">
+                ¿Qué es el RFC y por qué lo voy a necesitar?
+              </summary>
+              <p style="color: #ccc; line-height: 1.6; margin-top: 10px; padding-left: 10px;">
+                El Registro Federal de Contribuyentes (RFC) es una clave única que el gobierno utiliza para identificar a quienes realizan actividades económicas. Lo vas a necesitar sí o sí para entrar a trabajar formalmente, abrir cuentas bancarias, emitir facturas o cobrar becas institucionales.
+              </p>
+          </details>
+
+          <!-- Pregunta 2 -->
+          <details style="margin-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px;">
+              <summary style="color: #fff; font-weight: 600; cursor: pointer; font-size: 1.05rem;">
+                ¿Cómo tramito mi RFC por primera vez?
+              </summary>
+              <p style="color: #ccc; line-height: 1.6; margin-top: 10px; padding-left: 10px;">
+                Puedes agendar una cita directamente en el portal del SAT (en la sección "SAT ID" o citas presenciales). Necesitas tu CURP, un correo electrónico personal y una identificación oficial (INE o pasaporte vigente). Si eres mayor de edad, darte de alta es un derecho y una obligación sin costo.
+              </p>
+          </details>
+
+          <!-- Pregunta 3 -->
+          <details style="margin-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px;">
+              <summary style="color: #fff; font-weight: 600; cursor: pointer; font-size: 1.05rem;">
+                ¿Qué es la e.firma (firma electrónica) y para qué sirve?
+              </summary>
+              <p style="color: #ccc; line-height: 1.6; margin-top: 10px; padding-left: 10px;">
+                Es un archivo digital cifrado que funciona como tu firma autógrafa pero en internet. Te permite firmar contratos de trabajo, realizar trámites pesados sin hacer filas y presentar tus declaraciones de impuestos con seguridad jurídica. Se tramita obligatoriamente de forma presencial en las oficinas del SAT.
+              </p>
+          </details>
+
+          <!-- Pregunta 4 -->
+          <details style="padding-bottom: 5px;">
+              <summary style="color: #fff; font-weight: 600; cursor: pointer; font-size: 1.05rem;">
+                ¿Qué pasa si trabajo por honorarios o freelance?
+              </summary>
+              <p style="color: #ccc; line-height: 1.6; margin-top: 10px; padding-left: 10px;">
+                Tendrás que emitir Comprobantes Fiscales Digitales por Internet (facturas) a tus clientes cada que te paguen y realizar tus declaraciones mensuales o anuales. No le temas: llevar el control básico de tus ingresos te evita multas y te ayuda a comprobar tus propios ingresos.
+              </p>
+          </details>
+
+      </div>
+    </div>
+    
+<!-- ================= VISTA DETALLE: TUS DERECHOS CIUDADANOS ================= -->
+    <div id="detalle-derechos" style="display: none;">
+      <!-- Botón para regresar a la lista general -->
+      <button onclick="mostrarLista()" class="btn-secondary" style="margin-bottom: 20px; cursor: pointer; background: transparent; border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 8px 15px; border-radius: 8px;">
+        ← Volver a las guías
+      </button>
+
+      <span class="card-tag">Protección</span>
+      <h1 class="section-title" style="text-align: left; font-size: 2rem; margin-top: 10px;">Tus Derechos Ciudadanos</h1>
+      <p class="sub-subtitle" style="text-align: left; margin-bottom: 30px;">Qué hacer en caso de discriminación, abusos de autoridad o problemas laborales y escolares.</p>
+
+      <div class="content-body" style="background: rgba(255,255,255,0.03); padding: 25px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08);">
+          
+          <!-- Pregunta 1 -->
+          <details style="margin-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px;">
+              <summary style="color: #fff; font-weight: 600; cursor: pointer; font-size: 1.05rem;">
+                ¿Qué hago si sufro discriminación o acoso en la escuela o el trabajo?
+              </summary>
+              <p style="color: #ccc; line-height: 1.6; margin-top: 10px; padding-left: 10px;">
+                Primero: **documenta todo**. Guarda mensajes, correos, fechas, nombres de testigos y cualquier evidencia. No estás solo ni sola; acércate a las defensorías de derechos universitarios, recursos humanos (si el trato es formal) o instituciones públicas como el CONAPRED para recibir asesoría jurídica y psicológica sin costo.
+              </p>
+          </details>
+
+          <!-- Pregunta 2 -->
+          <details style="margin-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px;">
+              <summary style="color: #fff; font-weight: 600; cursor: pointer; font-size: 1.05rem;">
+                ¿Cuáles son mis derechos básicos si trabajo (formalmente)?
+              </summary>
+              <p style="color: #ccc; line-height: 1.6; margin-top: 10px; padding-left: 10px;">
+                Por ley te corresponden un contrato por escrito, pago de aguinaldo, vacaciones pagadas desde el primer año, reparto de utilidades, inscripción obligatoria al IMSS y jornadas laborales que no excedan los máximos legales sin su respectivo pago de horas extra. Ningún jefe puede retenerte pagos arbitrariamente.
+              </p>
+          </details>
+
+          <!-- Pregunta 3 -->
+          <details style="margin-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px;">
+              <summary style="color: #fff; font-weight: 600; cursor: pointer; font-size: 1.05rem;">
+                ¿Qué hacer ante un abuso de autoridad por parte de la policía o funcionarios?
+              </summary>
+              <p style="color: #ccc; line-height: 1.6; margin-top: 10px; padding-left: 10px;">
+                Mantén la calma, no caigas en provocaciones y evita agredir física o verbalmente. Tienes derecho a preguntar el motivo de la detención o revisión, a grabar con tu celular (es completamente legal en la vía pública) y a exigir una llamada para avisarle a una persona de confianza o abogado.
+              </p>
+          </details>
+
+          <!-- Pregunta 4 -->
+          <details style="padding-bottom: 5px;">
+              <summary style="color: #fff; font-weight: 600; cursor: pointer; font-size: 1.05rem;">
+                ¿Dónde puedo denunciar o pedir apoyo legal gratuito?
+              </summary>
+              <p style="color: #ccc; line-height: 1.6; margin-top: 10px; padding-left: 10px;">
+                Puedes acudir a la Procuraduría de la Defensa del Trabajo (PRODET) para temas laborales, a las comisiones de derechos humanos locales o federales, o a defensorías públicas comunitarias que brindan acompañamiento legal a jóvenes.
+              </p>
+          </details>
+
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Bottom Nav Unificada -->
+  <nav class="bottom-nav">
+    <a href="index.html" class="nav-item">
+      <span class="nav-icon"><i class="fa-solid fa-house"></i></span>
+      <span class="nav-label">Inicio</span>
+    </a>
+    <a href="guias.html" class="nav-item active">
+      <span class="nav-icon"><i class="fa-solid fa-book"></i></span>
+      <span class="nav-label">Guías</span>
+    </a>
+    <a href="bitacora.html" class="nav-item">
+      <span class="nav-icon"><i class="fa-solid fa-newspaper"></i></span>
+      <span class="nav-label">Bitácora</span>
+    </a>
+    <a href="red.html" class="nav-item">
+      <span class="nav-icon"><i class="fa-solid fa-users"></i></span>
+      <span class="nav-label">Red</span>
+    </a>
+  </nav>
+
+  <!-- Script para alternar las vistas dentro del mismo archivo -->
+  <script>
+    function mostrarGuia(idDetalle) {
+      document.getElementById('vista-lista').style.display = 'none';
+      document.getElementById(idDetalle).style.display = 'block';
+      window.scrollTo(0, 0); // Sube al inicio de la página automáticamente
+    }
+
+    function mostrarLista() {
+      document.getElementById('detalle-vih').style.display = 'none';
+      document.getElementById('vista-lista').style.display = 'block';
+      window.scrollTo(0, 0);
+    }
+  </script>
 </body>
 </html>
+
+
+
+<!-- ================= PLANTILLA DE GUÍA DE BOLSILLO (Copia esto para cada nueva guía) ================= -->
+    <div id="detalle-[ID-DE-LA-GUIA]" style="display: none;">
+      <!-- Botón para regresar a la lista general -->
+      <button onclick="mostrarLista()" class="btn-secondary" style="margin-bottom: 20px; cursor: pointer; background: transparent; border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 8px 15px; border-radius: 8px;">
+        ← Volver a las guías
+      </button>
+
+      <!-- Categoría (Ej: Salud Sexual, Vida Adulta, Protección) -->
+      <span class="card-tag">[CATEGORÍA DE LA GUÍA]</span>
+      
+      <!-- Título Principal de la Guía -->
+      <h1 class="section-title" style="text-align: left; font-size: 2rem; margin-top: 10px;">[Título Principal de la Guía]</h1>
+      
+      <!-- Subtítulo o Descripción Breve -->
+      <p class="sub-subtitle" style="text-align: left; margin-bottom: 30px;">[Breve descripción general sobre de qué trata esta guía y por qué es útil.]</p>
+
+      <!-- Contenedor de Preguntas Frecuentes (Acordeón) -->
+      <div class="content-body" style="background: rgba(255,255,255,0.03); padding: 25px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08);">
+          
+          <!-- Pregunta 1 -->
+          <details style="margin-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px;">
+              <summary style="color: #fff; font-weight: 600; cursor: pointer; font-size: 1.05rem;">
+                [¿Pregunta clave número 1?]
+              </summary>
+              <p style="color: #ccc; line-height: 1.6; margin-top: 10px; padding-left: 10px;">
+                [Respuesta directa, clara y validada sin rodeos para esta pregunta...]
+              </p>
+          </details>
+
+          <!-- Pregunta 2 -->
+          <details style="margin-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px;">
+              <summary style="color: #fff; font-weight: 600; cursor: pointer; font-size: 1.05rem;">
+                [¿Pregunta clave número 2?]
+              </summary>
+              <p style="color: #ccc; line-height: 1.6; margin-top: 10px; padding-left: 10px;">
+                [Respuesta directa para la segunda pregunta...]
+              </p>
+          </details>
+
+          <!-- Pregunta 3 (Puedes duplicar este bloque <details> las veces que necesites) -->
+          <details style="padding-bottom: 5px;">
+              <summary style="color: #fff; font-weight: 600; cursor: pointer; font-size: 1.05rem;">
+                [¿Pregunta clave número 3 o paso a paso final?]
+              </summary>
+              <p style="color: #ccc; line-height: 1.6; margin-top: 10px; padding-left: 10px;">
+                [Respuesta final o conclusión de la guía...]
+              </p>
+          </details>
+
+      </div>
+    </div>
