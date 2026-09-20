@@ -960,3 +960,7 @@ body:not(.home-page) .main-header {
   color: #ff4d4d;
 }
 
+/* Cambia la pregunta a rojo cuando el details esté abierto */
+details[open] summary {
+  color: #ff334b !important; /* Usa el tono rojo característico de tu marca */
+}
